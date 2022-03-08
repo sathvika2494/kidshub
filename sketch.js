@@ -1,69 +1,118 @@
-let x  = 0; //global avariables
-let y = 0;
-let x2 = 0
-let y2 = 0;
-let x3 = 0;
-let y3 = 0;
-let dir1 = 1
-let dir2 = 2
-let dir3 = 1
-
+var bgImage
+var mode
+var bi
+var locationx
+var locationy
+function preload()
+{
+  bgImage = loadImage("res\\mainMenu\\bg.png")
+  bi = loadImage("res\\mainMenu\\button1.png")
+}
 function setup() //only executes once, executes first
 {
-  createCanvas(800, 600);
+  createCanvas(1050, 700);
+  mode = 0
+  menu()
+
+  
+ 
 }
 
 function draw()  //executes after setup, 30 times a second
 { 
+  background(bgImage)
   
-  background("purple");
-
-  stroke("black");
-  strokeWeight(5)
-  fill("cyan");
-  rect(0,y,800,200);
-
-
-  y = y+ dir1 * 2 ;
-
-  if(y <= 0)
+  
+  if (mode == 0)
   {
-    dir1 = 1
+    menu()
+    
+  }
+  else if (mode == 1)
+  {
+    excerciseOne()
+  }
+  else if (mode == 2)
+  {
+    excerciseTwo()
+  }
+  else if (mode == 3)
+  {
+    excerciseThree()
+  }
+  else if (mode == 4)
+  {
+    excerciseFour()
+  }
+}
+
+
+function menu()
+{ 
+  
+  fill("black")
+  textSize(21)
+  text1 = ["excercise 1","excercise 2","excercise 3","excercise 4"]
+  textSize1 = 20
+  locationx = [350,850,350,850]
+  locationy = [350,350,650,650]
+
+
+  offset = 280
+  for(i = 0; i<4;i++)
+  {
+    image(bi,locationx[i] - offset,locationy[i] - offset)
+    text(text1[i],locationx[i],locationy[i])
+  }
+
+}
+
+function mouseClicked()
+{
+  print(mouseX + " " + mouseY)
+  if(mode == 0)
+  {
+    if(mouseX>69 && mouseY>71 && mouseX<460 && mouseY<307)
+    {
+       mode = 1
+    }
+    else if(mouseX>570 && mouseY>69  && mouseX<959   && mouseY<306  )
+    {
+       mode = 2
+    }
+    else if(mouseX>69 && mouseY>370 && mouseX<459 && mouseY<605)
+    {
+       mode = 3
+    }
+    else if(mouseX>571 && mouseY>370 && mouseX<959  && mouseY< 605)
+    {
+       mode = 4
+    }
    
   }
-  else if(y > 400)
-  {
-    dir1 = -1
-   
-  }
-
-  stroke("orange");
-  fill("green");
-  strokeWeight(2)
-  circle(x3+100,y3+100,200);
-
-  x3 = x3 + dir3*3
-  y3 = y3 + dir3*2
-
-  if(y3 <= 0)
-  {
-   dir3 = 1
-  }
-  else if(y3 > 400)
-  {
-  dir3 = -1
-  }
-
   
- /* stroke("red");
-  fill("yellow")
-  strokeWeight(10)
-  triangle(0,0,800,0,400,200)
+}
+function excerciseOne()
+{
 
-  stroke("red");
-  fill("yellow")
-  strokeWeight(7)
-  triangle(0,600,400,400,800,600)*/
+  mode = 1
+  background("red")
+}
 
+function excerciseTwo()
+{
+  mode = 2
+  background("yellow")
+}
 
+function excerciseThree()
+{
+  mode = 3
+  background("green")
+}
+
+function excerciseFour()
+{
+  mode = 4
+  background("blue")
 }
