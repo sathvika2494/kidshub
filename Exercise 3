@@ -1,1 +1,168 @@
+let cartop;
+let carright;
+let carleft;
 
+let dashes = new Array(11);
+let enemyCar = new Array(1);
+
+let INTRO = 0;
+let RUN_GAME = 1;
+let GAME_OVER = 2;
+
+let LEFT = 3;
+let RIGHT = 4;
+let CENTER = 5;
+
+let gameState = RUN_GAME;
+let userPosition = CENTER;
+let enemyPos = [64, 190, 315]
+let score = 0;
+
+function preLoad() {
+	carright = loadImage('CarRight.png');
+	carleft = loadImage('CarLeft.png');
+	cartop = loadImage('CarTop.png');
+}
+
+function setup() {
+	createCanvas(480, 700);
+	background(0);
+		for (let i = 0; i < dashes.length; i++) {
+		dashes[i] = new Dash(173, 296, i*69, 5);
+	}
+		for (let i = 0; i < enemyCar.length; i++) {
+		enemyCar[i] = new Car(random(enemyPos), -200, i * 10, 4);
+	}
+}
+
+function draw() {
+  if (gameState == INTRO) intro();
+  else if (gameState == RUN_GAME) runGame();
+  else if (gameState == GAME_OVER) gameOver();
+	
+	userDisplay(userPosition);
+}
+
+function runGame() {
+	background(0);
+	startingPosition = point(190, 500)
+	let position = startingPosition
+
+//-------------Side Lines-------------//
+	fill(255);
+	rect(50, 0, 10, 700);
+	rect(420, 0, 10, 700);
+	fill(215, 209, 8);
+	
+	//------------Enemy Car------------//
+	for (let i = 0; i < enemyCar.length; i++){
+		enemyCar[i].displayCar();
+		enemyCar[i].moveCar();
+	}
+	
+	score++;
+	drawScore()
+
+}
+class Car {
+	// --------- CAR: Attributes ---------//
+	constructor(tempX, tempY, tempPaint, tempSpeed) {
+		this.x = tempX;
+		this.y = tempY;
+		this.paint = tempPaint;
+		this.speed = tempSpeed;
+	}
+
+	//--------- CAR: Display ---------//
+	displayCar() {
+		fill(this.paint, 255, 255);
+		rect(this.x, this.y, 100, 200);
+
+	}
+
+	//-------- CAR: Move ---------//
+	moveCar() {
+		this.y += this.speed;
+	}
+}
+//------------Update Position (Pseudo Code)--------//
+function keyPressed() {
+  let position = userPosition
+	if (position === CENTER && keyCode === LEFT_ARROW) {
+    userPosition = LEFT
+  } else if (position === CENTER && keyCode === RIGHT_ARROW) {
+    userPosition = RIGHT
+  } //if car left and left arrow pressed return false
+	else if (position === LEFT && keyCode === RIGHT_ARROW) {
+		userPosition = CENTER
+	} //if car right and right arrow pressed return false
+	else if (position === RIGHT && keyCode === LEFT_ARROW) {
+		userPosition = CENTER
+	}
+}
+
+
+
+//--------------Car Display (Pseudo code)---------//
+function userDisplay(position) {
+	if (position === LEFT) {
+		image(carleft, 64, 500, 100, 200); //car left
+		fill(0);
+		rect(190, 500, 100, 200);
+		rect(315, 500, 100, 200);
+	}
+	if (position === RIGHT) {
+		image(carright, 315, 500, 100, 200); //car right
+		fill(0);
+		rect(190, 500, 100, 200);
+		rect(64, 500, 100, 200);
+	}
+	if (position === CENTER) {
+		image(cartop, 190, 500, 100, 200); //car top
+		fill(0);
+		rect(64, 500, 100, 200);
+		rect(315, 500, 100, 200);
+	}
+	
+	//-------------Dashed Lines-------------//
+		for (let i = 0; i < dashes.length; i++){
+	dashes[i].displayDash();
+	dashes[i].moveDash();
+	}
+}
+
+class Dash {
+	// --------- DASH: Attributes ---------//
+	constructor(tempX1, tempX2, tempY, tempSpeed) {
+		this.x1 = tempX1;
+		this.x2 = tempX2;
+		this.y = tempY;
+		this.speed = tempSpeed;
+	}
+
+	//--------- DASH: Display ---------//
+	displayDash() {
+		fill(215, 209, 8);
+		rect(this.x1, this.y, 10, 50);
+		rect(this.x2, this.y, 10, 50);
+
+	}
+
+	//-------- DASH: Move ---------//
+	moveDash() {
+		if ( this.y < height + length ) {
+			this.y += this.speed;
+		}    
+		else {
+			this.y = - 50;
+		}
+	}
+	
+}
+
+// --------- DRAW SCORE ---------- // 
+function drawScore() {  
+  fill(0, 255, 0); 
+  textSize(16);
+  text(score, 10, 20);
+}
